@@ -10,9 +10,19 @@ import 'fetch_books_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
+  late MockClient mockClient;
+
+  setUp(() {
+    //starts before tests
+    mockClient = MockClient(); //initialize mocks for these tests
+  });
+  tearDown(() {
+    //after all tests will run successfully
+    mockClient.close();
+  });
+
   test('should show list of books for success API call', () async {
     //arrange
-    final mockClient = MockClient();
     //create a mockito reaction- response for fetchBooksURL API
     when(mockClient.get(Uri.parse(fetchBooksURL))).thenAnswer(
       (realInvocation) async => http.Response(
@@ -31,7 +41,6 @@ void main() {
 
   test('Shows exception when API call throws error', () {
     //arrange
-    final mockClient = MockClient();
     //create a mockito reaction- error response for API call
     when(mockClient.get(Uri.parse(fetchBooksURL))).thenAnswer(
         (realInvocation) async =>
